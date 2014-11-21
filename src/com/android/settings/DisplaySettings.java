@@ -40,12 +40,15 @@ import android.content.res.Resources;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Build;
+import android.database.ContentObserver;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.RemoteException;
 import android.os.SystemProperties;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
 import android.provider.SearchIndexableResource;
@@ -70,6 +73,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private static final String KEY_DOZE = "doze";
     private static final String KEY_AUTO_BRIGHTNESS = "auto_brightness";
     private static final String KEY_AUTO_ROTATE = "auto_rotate";
+    private static final String KEY_VOLUME_WAKE = "pref_volume_wake";
 
     private static final int DLG_GLOBAL_CHANGE_WARNING = 1;
 
@@ -82,6 +86,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private SwitchPreference mLiftToWakePreference;
     private SwitchPreference mDozePreference;
     private SwitchPreference mAutoBrightnessPreference;
+    private SwitchPreference mVolumeWake;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -162,10 +167,21 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
                     return true;
                 }
             });
-        } else {
+
+        int counter = 0;
+        mVolumeWake = (SwitchPreference) findPreference(KEY_VOLUME_WAKE);
+        if (mVolumeWake != null) {
+                counter++;
+            } else {
+                mVolumeWake.setChecked(Settings.System.getInt(resolver,
+                        Settings.System.VOLUME_WAKE_SCREEN, 0) == 1);
+                mVolumeWake.setOnPreferenceChangeListener(this);
+            }
+ 		} else {
             removePreference(KEY_AUTO_ROTATE);
         }
-    }
+	} 
+
 
     private static boolean allowAllRotations(Context context) {
         return Resources.getSystem().getBoolean(
@@ -365,6 +381,11 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
                 Log.e(TAG, "could not persist screen timeout setting", e);
             }
         }
+        if (KEY_VOLUME_WAKE.equals(key)) {
+            Settings.System.putInt(getContentResolver(),
+                    Settings.System.VOLUME_WAKE_SCREEN,
+                    (Boolean) objValue ? 1 : 0);
+        }
         if (KEY_FONT_SIZE.equals(key)) {
             writeFontSizePreference(objValue);
         }
@@ -435,4 +456,3 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
                 }
             };
 }
-

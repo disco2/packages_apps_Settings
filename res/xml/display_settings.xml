@@ -103,5 +103,4 @@
                 android:defaultValue="false"
                 android:persistent="false" />
 
-         </PreferenceCategory>
 </PreferenceScreen>

@@ -5,4 +5,7 @@
     <string name="mod_version">D.I.S.C.O. Version</string>
     <string name="mod_version_default">Unknown</string>
 
+    <!-- Recents Show/Hide Search Bar -->
+    <string name="recents_showhide_searchbar">Show Search Bar in Recents</string>
+
 </resources>

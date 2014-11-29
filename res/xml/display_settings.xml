@@ -83,7 +83,7 @@
                 android:fragment="com.android.settings.wfd.WifiDisplaySettings" />
 
         <SwitchPreference
-                android:key="recents_showhide_searchbar"
+                android:key="recents_searchbar"
                 android:title="@string/recents_showhide_searchbar"
                 android:persistent="false" />
                 
